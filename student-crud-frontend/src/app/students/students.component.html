@@ -1,0 +1,92 @@
+<h2>Students List</h2>
+
+<!-- Form for Add / Edit -->
+<form (ngSubmit)="addStudent(studentForm)" #studentForm="ngForm" class="student-form">
+
+  <!-- Show errors -->
+  <div *ngIf="formErrors" style="color:red; margin-bottom:10px;">
+    {{ formErrors }}
+  </div>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="newStudent.student_name" name="student_name" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>City</mat-label>
+    <mat-select [(ngModel)]="newStudent.city" name="city" required>
+      <mat-option value="" disabled>Select a city</mat-option>
+      <mat-option *ngFor="let city of cities" [value]="city">{{ city }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Address</mat-label>
+    <textarea matInput [(ngModel)]="newStudent.address" name="address" required></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Birth Date</mat-label>
+    <input matInput type="date" [(ngModel)]="newStudent.birth_date" name="birth_date" required>
+  </mat-form-field>
+
+  <mat-checkbox [(ngModel)]="newStudent.is_active" name="is_active">Active</mat-checkbox>
+
+  <div style="margin-top:10px;">
+    <!-- Submit -->
+    <button mat-raised-button color="primary" type="submit">
+      {{ selectedStudentId ? 'Update Student' : 'Add Student' }}
+    </button>
+
+    <!-- Reset: clears form fields only -->
+    <button mat-button type="button" (click)="resetFields(studentForm)">Reset</button>
+
+    <!-- Cancel: exit form / reset selection -->
+    <button mat-button type="button" (click)="cancelForm(studentForm)">Cancel</button>
+  </div>
+</form>
+
+<!-- Table -->
+<table mat-table [dataSource]="students" class="mat-elevation-z8 full-width" style="margin-top:20px;">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>ID</th>
+    <td mat-cell *matCellDef="let student">{{ student.id }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="student_name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let student">{{ student.student_name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="city">
+    <th mat-header-cell *matHeaderCellDef>City</th>
+    <td mat-cell *matCellDef="let student">{{ student.city }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="address">
+    <th mat-header-cell *matHeaderCellDef>Address</th>
+    <td mat-cell *matCellDef="let student">{{ student.address }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="birth_date">
+    <th mat-header-cell *matHeaderCellDef>Birth Date</th>
+    <td mat-cell *matCellDef="let student">{{ student.birth_date }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="is_active">
+    <th mat-header-cell *matHeaderCellDef>Active</th>
+    <td mat-cell *matCellDef="let student">{{ student.is_active ? 'Yes' : 'No' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let student">
+      <button mat-button color="accent" (click)="editStudent(student)">Edit</button>
+      <button mat-button color="warn" (click)="deleteStudent(student.id!)">Delete</button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="['id','student_name','city','address','birth_date','is_active','actions']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['id','student_name','city','address','birth_date','is_active','actions']"></tr>
+</table>
